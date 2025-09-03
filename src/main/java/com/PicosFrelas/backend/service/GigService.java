@@ -3,6 +3,9 @@ package com.PicosFrelas.backend.service;
 import com.PicosFrelas.backend.model.Gig;
 import com.PicosFrelas.backend.repository.GigRepository;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.UUID;
+import java.util.Optional;
 
 @Service
 public class GigService {
@@ -14,7 +17,16 @@ public class GigService {
     }
 
     public Gig createGig(Gig gig) {
-        // Lógica de validação pode vir aqui
         return gigRepository.save(gig);
+    }
+
+    
+    public List<Gig> findAllGigs() {
+        return gigRepository.findAll();
+    }
+
+    
+    public Optional<Gig> findGigById(UUID id) {
+        return gigRepository.findById(id);
     }
 }
