@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -34,7 +36,11 @@ public class Gig {
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
-    // O gig pertence a um criador (contratante)
+    
+    @OneToMany(mappedBy = "gig", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Proposal> proposals = new ArrayList<>();
+
+    
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
