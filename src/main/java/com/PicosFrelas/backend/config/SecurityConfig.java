@@ -50,7 +50,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Não usa sessão
             .authorizeHttpRequests(authz -> authz
                 // Permite acesso público a estes endpoints
-                .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/gigs", "/api/gigs/**", "/api/job-listings", "/api/job-listings/**").permitAll()
+                .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/gigs", "/api/gigs/**", "/api/job-listings", "/api/job-listings/**", "/api/users/**").permitAll()
                 // Exige autenticação para qualquer outro endpoint
                 .anyRequest().authenticated()
             )

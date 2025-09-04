@@ -5,9 +5,12 @@ import lombok.Data;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "reviews")
 @Data
+@JsonIgnoreProperties({"job"})
 public class Review {
 
     @Id

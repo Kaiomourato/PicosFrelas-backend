@@ -8,9 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "gigs")
 @Data
+@JsonIgnoreProperties({"proposals", "creator"})
 public class Gig {
 
     @Id
