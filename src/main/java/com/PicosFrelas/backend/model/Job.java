@@ -3,6 +3,8 @@ package com.PicosFrelas.backend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -38,6 +40,9 @@ public class Job {
     @ManyToOne
     @JoinColumn(name = "freelancer_id", nullable = false)
     private User freelancer;
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
 
     public enum Status {
         started, completed, closed, disputed
