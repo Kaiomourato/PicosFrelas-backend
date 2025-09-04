@@ -2,20 +2,20 @@ package com.PicosFrelas.backend.controller;
 
 import com.PicosFrelas.backend.model.JobListing;
 import com.PicosFrelas.backend.model.User;
-import com.PicosFrelas.backend.repository.JobListingRepository; // Importe este
+import com.PicosFrelas.backend.repository.JobListingRepository;
 import com.PicosFrelas.backend.service.JobListingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import java.util.List; // Importe este
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/job-listings")
 public class JobListingController {
 
     private final JobListingService jobListingService;
-    private final JobListingRepository jobListingRepository; // Adicione este
+    private final JobListingRepository jobListingRepository;
 
     public JobListingController(JobListingService jobListingService, JobListingRepository jobListingRepository) {
         this.jobListingService = jobListingService;
@@ -29,9 +29,11 @@ public class JobListingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdListing);
     }
 
+    //Endpoint para listar vagas com filtros (acesso público)
     @GetMapping
-    public ResponseEntity<List<JobListing>> getAllJobListings() {
-        List<JobListing> listings = jobListingRepository.findAll();
+    public ResponseEntity<List<JobListing>> getAllJobListings(@RequestParam(required = false) String city,
+                                                              @RequestParam(required = false) String query) {
+        List<JobListing> listings = jobListingRepository.findByFilters(city, query);
         return ResponseEntity.ok(listings);
     }
 }
