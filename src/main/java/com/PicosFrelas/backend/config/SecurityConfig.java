@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -43,10 +45,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .cors(withDefaults()) // Permite CORS, importante para o frontend
+            .csrf(csrf -> csrf.disable()) // Desabilita CSRF para a API REST
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Não usa sessão
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/gigs", "/api/gigs/**").permitAll()
+                // Permite acesso público a estes endpoints
+                .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/gigs", "/api/gigs/**", "/api/job-listings", "/api/job-listings/**").permitAll()
+                // Exige autenticação para qualquer outro endpoint
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
