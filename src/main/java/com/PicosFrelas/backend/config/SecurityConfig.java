@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,6 +20,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -45,13 +47,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(withDefaults()) // Permite CORS, importante para o frontend
-            .csrf(csrf -> csrf.disable()) // Desabilita CSRF para a API REST
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Não usa sessão
+            .cors(withDefaults())
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
-                // Permite acesso público a estes endpoints
-                .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/gigs", "/api/gigs/**", "/api/job-listings", "/api/job-listings/**", "/api/users/**").permitAll()
-                // Exige autenticação para qualquer outro endpoint
+                // Unificando todas as permissões em uma única chamada de requestMatchers
+                .requestMatchers("/api/temp/create-admin", "/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/gigs", "/api/gigs/**", "/api/job-listings", "/api/job-listings/**", "/api/users/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

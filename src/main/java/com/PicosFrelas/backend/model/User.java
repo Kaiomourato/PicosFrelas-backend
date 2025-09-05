@@ -3,16 +3,18 @@ package com.PicosFrelas.backend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
 @Data
-public class User implements UserDetails { // Implemente UserDetails
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -27,6 +29,10 @@ public class User implements UserDetails { // Implemente UserDetails
     private String city;
     @Column(name = "is_freelancer")
     private Boolean isFreelancer = false;
+    @Column(name = "is_admin") 
+    private Boolean isAdmin = false;
+    @Column(name = "is_partner") 
+    private Boolean isPartner = false;
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
@@ -37,6 +43,10 @@ public class User implements UserDetails { // Implemente UserDetails
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Retorna o papel de ADMIN se o usuário for um administrador.
+        if (Boolean.TRUE.equals(this.isAdmin)) {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
         return Collections.emptyList();
     }
 
