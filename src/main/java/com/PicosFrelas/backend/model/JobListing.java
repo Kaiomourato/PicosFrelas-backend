@@ -14,6 +14,10 @@ public class JobListing {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    // NOVO: Campo para o tipo de anúncio
+    @Enumerated(EnumType.STRING)
+    private Type type;
+
     private String title;
     private String company;
     private String description;
@@ -28,6 +32,10 @@ public class JobListing {
 
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
+
+    public enum Type {
+        JOB, BUSINESS, EVENT
+    }
 
     @PrePersist
     protected void onCreate() {
