@@ -9,16 +9,13 @@ import java.util.UUID;
 
 public interface JobListingRepository extends JpaRepository<JobListing, UUID> {
 
-    // Mantém o método de busca por cidade
-    List<JobListing> findByCityIgnoreCase(String city);
-
-    // Método para buscar por múltiplos filtros
-    @Query("SELECT j FROM JobListing j WHERE " +
+    // Usando consulta nativa com CAST explícito
+    @Query(value = "SELECT * FROM job_listings j WHERE " +
            "(:city IS NULL OR j.city = :city) AND " +
            "(:query IS NULL OR " +
-           "LOWER(j.title) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-           "LOWER(j.company) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-           "LOWER(j.description) LIKE LOWER(CONCAT('%', :query, '%')))")
-    List<JobListing> findByFilters(@Param("city") String city,
-                                   @Param("query") String query);
+           "LOWER(CAST(j.title AS TEXT)) LIKE LOWER(CONCAT('%', CAST(:query AS TEXT), '%')) OR " +
+           "LOWER(CAST(j.company AS TEXT)) LIKE LOWER(CONCAT('%', CAST(:query AS TEXT), '%')) OR " +
+           "LOWER(CAST(j.description AS TEXT)) LIKE LOWER(CONCAT('%', CAST(:query AS TEXT), '%')))", 
+           nativeQuery = true)
+    List<JobListing> findByFilters(@Param("city") String city, @Param("query") String query);
 }

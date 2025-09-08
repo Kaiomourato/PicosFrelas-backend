@@ -39,6 +39,12 @@ public class UserController {
         return user;
     }
 
+
+    @GetMapping("/users/me")
+    public ResponseEntity<User> getCurrentUser(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(user);
+}
+
     @GetMapping("/{id}/reviews")
     public ResponseEntity<List<Review>> getReviewsByUser(@PathVariable UUID id) {
         List<Review> reviews = reviewRepository.findByRevieweeId(id);
